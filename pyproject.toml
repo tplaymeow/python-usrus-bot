@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "python-usrus-bot"
+version = "0.1.0"
+description = ""
+authors = ["tplaymeow <wersa2002@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = "^3.0.0"
+openai = "^0.28.0"
+gtts = "^2.3.2"
+asyncpg = "^0.28.0"
+motor = "^3.3.1"
+nltk = "^3.8.1"
+
+
+[tool.poetry.group.dev.dependencies]
+setuptools = "^68.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
