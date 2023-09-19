@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  usrus-bot:
+    build: .
+    depends_on:
+      - mongodb
+    networks:
+      - bot-network
+    env_file: .env
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - bot-network
+
+
+volumes:
+  dbdata6:
+
+networks:
+  bot-network:
+    driver: bridge

@@ -8,6 +8,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from python_usrus_bot.bot.bot_context import BotContext
 from python_usrus_bot.bot.handle_add_answer_style import handle_add_answer_style
 from python_usrus_bot.bot.handle_add_description import handle_add_description
+from python_usrus_bot.bot.handle_description import handle_description
 from python_usrus_bot.bot.handle_info import handle_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
@@ -18,7 +19,7 @@ from python_usrus_bot.database.user_info_repository import UserInfoRepository
 
 dp = Dispatcher()
 
-db_client = AsyncIOMotorClient("mongodb://127.0.0.1:27017")
+db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
     user_info_repository=UserInfoRepository(db_client),
     description_repository=DescriptionRepository(db_client),
@@ -34,6 +35,11 @@ async def command_info(message: Message) -> None:
 @dp.message(Command("add_description"))
 async def command_add_description(message: Message) -> None:
     await handle_add_description(message, context)
+
+
+@dp.message(Command("description"))
+async def command_add_description(message: Message) -> None:
+    await handle_description(message, context)
 
 
 @dp.message(Command("add_answer_style"))
