@@ -22,3 +22,12 @@ class ObsceneExpressionsStatRepository(AbstractRepository):
         return ObsceneExpressionsStat(
             date=datetime.date.fromisoformat(result["date"]),
             count=result["count"])
+
+    async def get_all(self) -> list[ObsceneExpressionsStat]:
+        result = await self.database["obscene_expressions_stat"].find().to_list(None) or []
+        return [
+            ObsceneExpressionsStat(
+                datetime.date.fromisoformat(item["date"]),
+                item["count"]
+            ) for item in result
+        ]

@@ -2,7 +2,9 @@ from os import getenv
 
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
+from aiogram.methods import SendMessage
 from aiogram.types import Message
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from python_usrus_bot.bot.bot_context import BotContext
@@ -20,12 +22,19 @@ from python_usrus_bot.database.user_info_repository import UserInfoRepository
 
 dp = Dispatcher()
 
+scheduler = AsyncIOScheduler()
+
 db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
     user_info_repository=UserInfoRepository(db_client),
     description_repository=DescriptionRepository(db_client),
     answer_style_repository=AnswerStyleRepository(db_client),
     obscene_expressions_stat_repository=ObsceneExpressionsStatRepository(db_client))
+
+
+@dp.message(Command("subscribe"))
+async def command_subscribe(message: Message) -> None:
+    scheduler.add_job(send_chat_info, "cron", hour=20, minute=0, args=[message.chat.id])
 
 
 @dp.message(Command("info"))
@@ -61,4 +70,16 @@ async def other_message(message: Message) -> None:
 
 async def start_bot() -> None:
     bot = Bot(getenv("TG_BOT_TOKEN"))
+    scheduler.start()
     await dp.start_polling(bot)
+
+
+async def send_chat_info(chat_id: int) -> None:
+    users = await context.user_info_repository.get_all()
+    message = "Сапожники:"
+
+    for user in users:
+        obscene_info = await context.obscene_expressions_stat_repository.get(user.id)
+        message += f"\n{user.name} плохо выразился {obscene_info.count} раз"
+
+    await SendMessage(chat_id, message)

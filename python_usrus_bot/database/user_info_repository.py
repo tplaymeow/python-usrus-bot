@@ -22,3 +22,14 @@ class UserInfoRepository(AbstractRepository):
             username=result["username"],
             name=result["name"],
             is_admin=result.get("is_admin") or False)
+
+    async def get_all(self) -> list[UserInfo]:
+        result = await self.database["user_info"].find().to_list(None) or []
+        return [
+            UserInfo(
+                id=item["user_id"],
+                username=item["username"],
+                name=item["name"],
+                is_admin=item.get("is_admin") or False
+            ) for item in result
+        ]
