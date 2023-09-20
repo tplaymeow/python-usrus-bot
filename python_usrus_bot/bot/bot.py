@@ -22,7 +22,9 @@ from python_usrus_bot.database.user_info_repository import UserInfoRepository
 
 dp = Dispatcher()
 
-scheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler(gconfig={
+    'timezone': 'MSK'
+})
 
 db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
@@ -34,9 +36,7 @@ context = BotContext(
 
 @dp.message(Command("subscribe"))
 async def command_subscribe(message: Message) -> None:
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=25, args=[message.chat.id])
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=27, args=[message.chat.id])
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=29, args=[message.chat.id])
+    scheduler.add_job(send_chat_info, "cron", hour='*', minute='*', args=[message.chat.id])
 
 
 @dp.message(Command("info"))
