@@ -34,7 +34,9 @@ context = BotContext(
 
 @dp.message(Command("subscribe"))
 async def command_subscribe(message: Message) -> None:
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=20, args=[message.chat.id])
+    scheduler.add_job(send_chat_info, "cron", hour=20, minute=25, args=[message.chat.id])
+    scheduler.add_job(send_chat_info, "cron", hour=20, minute=27, args=[message.chat.id])
+    scheduler.add_job(send_chat_info, "cron", hour=20, minute=29, args=[message.chat.id])
 
 
 @dp.message(Command("info"))
@@ -80,6 +82,6 @@ async def send_chat_info(chat_id: int) -> None:
 
     for user in users:
         obscene_info = await context.obscene_expressions_stat_repository.get(user.id)
-        message += f"\n{user.name} плохо выразился {obscene_info.count} раз"
+        message += f"\n@{user.username} {user.name or ''} плохо выразился {obscene_info.count} раз"
 
     await SendMessage(chat_id, message)
