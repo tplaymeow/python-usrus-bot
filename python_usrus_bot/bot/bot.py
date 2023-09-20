@@ -20,11 +20,9 @@ from python_usrus_bot.database.description_repository import DescriptionReposito
 from python_usrus_bot.database.obscene_expressions_stat_repository import ObsceneExpressionsStatRepository
 from python_usrus_bot.database.user_info_repository import UserInfoRepository
 
+bot = Bot(getenv("TG_BOT_TOKEN"))
 dp = Dispatcher()
-
-scheduler = AsyncIOScheduler(gconfig={
-    'timezone': 'MSK'
-})
+scheduler = AsyncIOScheduler(gconfig={'timezone': 'MSK'})
 
 db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
@@ -71,7 +69,6 @@ async def other_message(message: Message) -> None:
 
 
 async def start_bot() -> None:
-    bot = Bot(getenv("TG_BOT_TOKEN"))
     scheduler.start()
     await dp.start_polling(bot)
 
@@ -84,4 +81,4 @@ async def send_chat_info(chat_id: int) -> None:
         obscene_info = await context.obscene_expressions_stat_repository.get(user.id)
         message += f"\n@{user.username} {user.name or ''} плохо выразился {obscene_info.count} раз"
 
-    await SendMessage(chat_id, message)
+    await bot.send_message(chat_id, message)
