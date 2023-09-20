@@ -13,7 +13,7 @@ def text_tokenize(text: str) -> [str]:
 
 
 def text_preprocessing(text: str) -> [str]:
-    # download_res()
+    download_res()
 
     text_tokens = text_tokenize(text)
     stop_words = set(stopwords.words())

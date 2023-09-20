@@ -34,7 +34,7 @@ context = BotContext(
 
 @dp.message(Command("subscribe"))
 async def command_subscribe(message: Message) -> None:
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=0, args=[message.chat.id])
+    scheduler.add_job(send_chat_info, "cron", hour=20, minute=20, args=[message.chat.id])
 
 
 @dp.message(Command("info"))
