@@ -15,6 +15,7 @@ from python_usrus_bot.bot.handle_info import handle_info
 from python_usrus_bot.bot.handle_obscene_info import handle_obscene_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
+from python_usrus_bot.bot.helpers import is_user_admin
 from python_usrus_bot.database.answer_style_repository import AnswerStyleRepository
 from python_usrus_bot.database.description_repository import DescriptionRepository
 from python_usrus_bot.database.obscene_expressions_stat_repository import ObsceneExpressionsStatRepository
@@ -34,7 +35,14 @@ context = BotContext(
 
 @dp.message(Command("subscribe"))
 async def command_subscribe(message: Message) -> None:
-    scheduler.add_job(send_chat_info, "cron", hour='*', minute='*', args=[message.chat.id])
+    if not await is_user_admin(message, context):
+        await message.answer("Действие доступно только админам")
+        return
+
+    scheduler.add_job(
+        send_chat_info,
+        trigger="cron", id=str(message.chat.id),
+        hour=0, minute=0, args=[message.chat.id])
 
 
 @dp.message(Command("info"))
