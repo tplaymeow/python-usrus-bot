@@ -10,6 +10,7 @@ from python_usrus_bot.bot.handle_add_answer_style import handle_add_answer_style
 from python_usrus_bot.bot.handle_add_description import handle_add_description
 from python_usrus_bot.bot.handle_description import handle_description
 from python_usrus_bot.bot.handle_info import handle_info
+from python_usrus_bot.bot.handle_obscene_info import handle_obscene_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
 from python_usrus_bot.database.answer_style_repository import AnswerStyleRepository
@@ -30,6 +31,11 @@ context = BotContext(
 @dp.message(Command("info"))
 async def command_info(message: Message) -> None:
     await handle_info(message)
+
+
+@dp.message(Command("obscene_info"))
+async def command_obscene_info(message: Message) -> None:
+    await handle_obscene_info(message, context)
 
 
 @dp.message(Command("add_description"))
