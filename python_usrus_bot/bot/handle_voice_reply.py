@@ -1,5 +1,6 @@
 from os import remove
 from random import random
+from typing import Optional
 
 from aiogram.types import Message, FSInputFile
 
@@ -16,10 +17,13 @@ def should_process(message_text: str) -> bool:
     return len(message_text) > 30 and random() < 0.3
 
 
-async def handle_voice_reply(message: Message, context: BotContext) -> None:
-    message_text = message.text
-    if message_text is None:
-        return
+async def handle_voice_reply(message: Message, context: BotContext, text: str = None) -> None:
+    if text is None:
+        message_text = message.text
+        if message_text is None:
+            return
+    else:
+        message_text = text
 
     if not should_process(message_text):
         return
@@ -33,16 +37,16 @@ async def handle_voice_reply(message: Message, context: BotContext) -> None:
     styles = await context.answer_style_repository.get(user_info.id) or []
     styles_texts = pick_random_styles(styles, 2)
     styles_text = "\n".join(styles_texts)
-
+    print(text)
     request_text = ("Составь короткий ответ на сообщение от женского лица в чате человеку в указанном стиле, используя "
                     "описание человека.\n")
     request_text += f"Имя человека: {user_info.name}.\n\n" if user_info.name is not None else ""
-    request_text += f"Сообщение:\n{message_text}\n\n"
+    request_text += f"Сообщение:\n{message_text + text}\n\n"
     request_text += f"Описание человека:\n{descriptions_text}\n\n"
     request_text += f"Стиль ответа:\n{styles_text}\n\n"
 
     reply_text = await chat_gpt_request(request_text)
-
+    print(reply_text)
     filename = f"{message.message_id}.mp3"
 
     text_to_speech(reply_text, filename)
