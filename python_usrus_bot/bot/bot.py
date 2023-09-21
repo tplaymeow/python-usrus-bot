@@ -1,6 +1,7 @@
-from os import getenv
+from os import getenv, remove
+from pathlib import Path
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
 from aiogram.methods import SendMessage
 from aiogram.types import Message
@@ -15,6 +16,7 @@ from python_usrus_bot.bot.handle_info import handle_info
 from python_usrus_bot.bot.handle_obscene_info import handle_obscene_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
+from python_usrus_bot.bot.handler_answer_voice import handler_answer_voice
 from python_usrus_bot.bot.helpers import is_user_admin
 from python_usrus_bot.database.answer_style_repository import AnswerStyleRepository
 from python_usrus_bot.database.description_repository import DescriptionRepository
@@ -31,6 +33,11 @@ context = BotContext(
     description_repository=DescriptionRepository(db_client),
     answer_style_repository=AnswerStyleRepository(db_client),
     obscene_expressions_stat_repository=ObsceneExpressionsStatRepository(db_client))
+
+
+@dp.message(F.content_type.in_({'video_note', 'voice'}))
+async def answer_voice_handler(message: Message):
+    await handler_answer_voice(message, context, bot)
 
 
 @dp.message(Command("subscribe"))
