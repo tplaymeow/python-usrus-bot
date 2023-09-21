@@ -1,3 +1,4 @@
+from aiogram.enums import ContentType
 from aiogram.types import Message
 
 from python_usrus_bot.bot.bot_context import BotContext
@@ -15,3 +16,12 @@ async def get_user_info(message: Message, context: BotContext) -> UserInfo:
 async def is_user_admin(message: Message, context: BotContext) -> bool:
     user_info = await get_user_info(message, context)
     return user_info.is_admin
+
+def convert_content_type(message: Message) -> str:
+    match message.content_type:
+        case ContentType.VOICE:
+            return "голосовухи"
+        case ContentType.VIDEO_NOTE:
+            return "кружочка"
+        case _:
+            return ""

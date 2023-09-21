@@ -97,9 +97,3 @@ class STT:
         return result_dict["text"]               # текст в виде str
 
 
-if __name__ == "__main__":
-    # Распознование аудио
-    start_time = datetime.now()
-    stt = STT()
-    print(stt.audio_to_text("/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/test_1.ogg"))
-    print("Время выполнения:", datetime.now() - start_time)
