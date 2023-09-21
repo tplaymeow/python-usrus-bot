@@ -17,16 +17,16 @@ from python_usrus_bot.bot.handle_obscene_info import handle_obscene_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
 from python_usrus_bot.bot.handler_answer_voice import handler_answer_voice
+from python_usrus_bot.bot.helpers import is_user_admin
 from python_usrus_bot.database.answer_style_repository import AnswerStyleRepository
 from python_usrus_bot.database.description_repository import DescriptionRepository
 from python_usrus_bot.database.obscene_expressions_stat_repository import ObsceneExpressionsStatRepository
 from python_usrus_bot.database.user_info_repository import UserInfoRepository
-from python_usrus_bot.stt.stt import STT
 
-dp = Dispatcher()
-
-scheduler = AsyncIOScheduler()
 bot = Bot(getenv("TG_BOT_TOKEN"))
+dp = Dispatcher()
+scheduler = AsyncIOScheduler(gconfig={'timezone': 'MSK'})
+
 db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
     user_info_repository=UserInfoRepository(db_client),
@@ -42,7 +42,14 @@ async def answer_voice_handler(message: Message):
 
 @dp.message(Command("subscribe"))
 async def command_subscribe(message: Message) -> None:
-    scheduler.add_job(send_chat_info, "cron", hour=20, minute=20, args=[message.chat.id])
+    if not await is_user_admin(message, context):
+        await message.answer("Действие доступно только админам")
+        return
+
+    scheduler.add_job(
+        send_chat_info,
+        trigger="cron", id=str(message.chat.id),
+        hour=0, minute=0, args=[message.chat.id])
 
 
 @dp.message(Command("info"))
@@ -87,6 +94,6 @@ async def send_chat_info(chat_id: int) -> None:
 
     for user in users:
         obscene_info = await context.obscene_expressions_stat_repository.get(user.id)
-        message += f"\n{user.name} плохо выразился {obscene_info.count} раз"
+        message += f"\n@{user.username} {user.name or ''} плохо выразился {obscene_info.count} раз"
 
-    await SendMessage(chat_id, message)
+    await bot.send_message(chat_id, message)
