@@ -1,28 +1,24 @@
 import json
 import os
 import subprocess
-from datetime import datetime
 
 from vosk import KaldiRecognizer, Model
 
 
 class STT:
-
     default_init = {
-        "model_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/model",  # путь к папке с файлами STT модели Vosk
+        "model_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/big_model",
         "sample_rate": 16000,
-        "ffmpeg_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/ffmpeg"  # путь к ffmpeg
+        "ffmpeg_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/ffmpeg"
     }
 
-    def __init__(self,
-                 model_path=None,
-                 sample_rate=None,
-                 ffmpeg_path=None
-                 ) -> None:
+    def __init__(
+            self,
+            model_path=None,
+            sample_rate=None,
+            ffmpeg_path=None
+    ) -> None:
         """
-        Настройка модели Vosk для распознования аудио и
-        преобразования его в текст.
-
         :arg model_path:  str  путь до модели Vosk
         :arg sample_rate: int  частота выборки, обычно 16000
         :arg ffmpeg_path: str  путь к ffmpeg
@@ -38,14 +34,11 @@ class STT:
         self.recognizer.SetWords(True)
 
     def _check_model(self):
-        """
-        Проверка наличия модели Vosk на нужном языке в каталоге приложения
-        """
-        # if not os.path.exists(self.model_path):
-        #     raise Exception(
-        #         "Vosk: сохраните папку model в папку vosk\n"
-        #         "Скачайте модель по ссылке https://alphacephei.com/vosk/models"
-        #                     )
+        if not os.path.exists(self.model_path):
+            raise Exception(
+                "Vosk: сохраните папку model в папку vosk\n"
+                "Скачайте модель по ссылке https://alphacephei.com/vosk/models"
+            )
 
         isffmpeg_here = False
         for file in os.listdir(self.ffmpeg_path):
@@ -56,15 +49,10 @@ class STT:
             raise Exception(
                 "Ffmpeg: сохраните ffmpeg.exe в папку ffmpeg\n"
                 "Скачайте ffmpeg.exe по ссылке https://ffmpeg.org/download.html"
-                            )
+            )
         self.ffmpeg_path = self.ffmpeg_path + '/ffmpeg'
 
     def audio_to_text(self, audio_file_name=None) -> str:
-        """
-        Offline-распознавание аудио в текст через Vosk
-        :param audio_file_name: str путь и имя аудио файла
-        :return: str распознанный текст
-        """
         if audio_file_name is None:
             raise Exception("Укажите путь и имя файла")
         if not os.path.exists(audio_file_name):
@@ -74,14 +62,14 @@ class STT:
         process = subprocess.Popen(
             [self.ffmpeg_path,
              "-loglevel", "quiet",
-             "-i", audio_file_name,          # имя входного файла
-             "-ar", str(self.sample_rate),   # частота выборки
-             "-ac", "1",                     # кол-во каналов
-             "-f", "s16le",                  # кодек для перекодирования, у нас wav
-             "-"                             # имя выходного файла нет, тк читаем из stdout
+             "-i", audio_file_name,  # имя входного файла
+             "-ar", str(self.sample_rate),  # частота выборки
+             "-ac", "1",  # кол-во каналов
+             "-f", "s16le",  # кодек для перекодирования, у нас wav
+             "-"  # имя выходного файла нет, тк читаем из stdout
              ],
             stdout=subprocess.PIPE
-                                   )
+        )
 
         # Чтение данных кусками и распознование через модель
         while True:
@@ -92,8 +80,6 @@ class STT:
                 pass
 
         # Возвращаем распознанный текст в виде str
-        result_json = self.recognizer.FinalResult()  # это json в виде str
-        result_dict = json.loads(result_json)    # это dict
-        return result_dict["text"]               # текст в виде str
-
-
+        result_json = self.recognizer.FinalResult()
+        result_dict = json.loads(result_json)
+        return result_dict["text"]
