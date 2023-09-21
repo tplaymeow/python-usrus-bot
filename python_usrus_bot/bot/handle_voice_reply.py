@@ -14,7 +14,7 @@ from python_usrus_bot.tts.tts import text_to_speech
 
 
 def should_process(message_text: str) -> bool:
-    return len(message_text) > 30 and random() < 0.3
+    return len(message_text) > 30 and random() < 0.05
 
 
 async def handle_voice_reply(message: Message, context: BotContext, text: str = None) -> None:
