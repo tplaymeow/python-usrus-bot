@@ -1,2 +1,0 @@
-# ffmpeg_url
-# https://ffmpeg.org/download.html
