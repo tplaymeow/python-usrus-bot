@@ -4,12 +4,14 @@ import subprocess
 
 from vosk import KaldiRecognizer, Model
 
+def speech_to_text():
+    pass
 
 class STT:
     default_init = {
-        "model_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/big_model",
+        "model_path": "/Users/tplaymeow/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/model",
         "sample_rate": 16000,
-        "ffmpeg_path": "/Users/mov4d/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/ffmpeg"
+        "ffmpeg_path": "/Users/tplaymeow/Desktop/python-usrus-bot/python_usrus_bot/stt/models/vosk/"
     }
 
     def __init__(
@@ -27,7 +29,7 @@ class STT:
         self.sample_rate = sample_rate if sample_rate else STT.default_init["sample_rate"]
         self.ffmpeg_path = ffmpeg_path if ffmpeg_path else STT.default_init["ffmpeg_path"]
 
-        # self._check_model()
+        self._check_model()
 
         model = Model(self.model_path)
         self.recognizer = KaldiRecognizer(model, self.sample_rate)

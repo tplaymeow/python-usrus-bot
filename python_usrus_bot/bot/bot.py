@@ -25,7 +25,7 @@ from python_usrus_bot.database.user_info_repository import UserInfoRepository
 
 bot = Bot(getenv("TG_BOT_TOKEN"))
 dp = Dispatcher()
-scheduler = AsyncIOScheduler(gconfig={'timezone': 'MSK'})
+scheduler = AsyncIOScheduler()
 
 db_client = AsyncIOMotorClient("mongodb://mongodb:27017")
 context = BotContext(
