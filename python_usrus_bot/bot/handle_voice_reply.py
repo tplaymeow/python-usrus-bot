@@ -41,7 +41,7 @@ async def handle_voice_reply(message: Message, context: BotContext, text: str = 
     request_text = ("Составь короткий ответ на сообщение от женского лица в чате человеку в указанном стиле, используя "
                     "описание человека.\n")
     request_text += f"Имя человека: {user_info.name}.\n\n" if user_info.name is not None else ""
-    request_text += f"Сообщение:\n{message_text + text}\n\n"
+    request_text += f"Сообщение:\n{message_text}\n\n"
     request_text += f"Описание человека:\n{descriptions_text}\n\n"
     request_text += f"Стиль ответа:\n{styles_text}\n\n"
 
