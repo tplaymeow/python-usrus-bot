@@ -4,7 +4,7 @@ from pathlib import Path
 
 from aiogram import Bot, types
 from aiogram.enums import ContentType
-from aiogram.types import Message, Voice, VideoNote
+from aiogram.types import Message, Voice, VideoNote, FSInputFile
 from pydub import AudioSegment
 
 from python_usrus_bot.bot.bot_context import BotContext
@@ -46,8 +46,10 @@ async def save_video_note_as_wav(bot: Bot, video: VideoNote) -> str:
 async def handler_answer_voice(message: Message, context: BotContext, bot: Bot) -> None:
     match message.content_type:
         case ContentType.VOICE:
-            await save_voice_as_wav(bot, message.voice)
+            filename = await save_voice_as_wav(bot, message.voice)
+            await message.reply_voice(FSInputFile(filename))
         case ContentType.VIDEO_NOTE:
-            await save_video_note_as_wav(bot, message.video_note)
+            filename = await save_video_note_as_wav(bot, message.video_note)
+            await message.reply_voice(FSInputFile(filename))
         case _:
             return
