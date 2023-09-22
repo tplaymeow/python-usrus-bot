@@ -7,9 +7,7 @@ ENV PYTHONPATH "${PYTHONPATH}:/app"
 RUN mkdir app
 WORKDIR app
 
-RUN sudo apt update &&  \
-    sudo apt upgrade && \
-    sudo apt install ffmpeg
+RUN sudo apt update && sudo apt install -y ffmpeg
 
 ENV POETRY_VERSION 1.6.1
 RUN pip install "poetry==$POETRY_VERSION"
