@@ -16,6 +16,7 @@ from python_usrus_bot.bot.handle_info import handle_info
 from python_usrus_bot.bot.handle_obscene_info import handle_obscene_info
 from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
 from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
+from python_usrus_bot.bot.handle_who_is_right import handle_who_is_right
 from python_usrus_bot.bot.handler_answer_voice import handler_answer_voice
 from python_usrus_bot.bot.helpers import is_user_admin
 from python_usrus_bot.database.answer_style_repository import AnswerStyleRepository
@@ -75,6 +76,11 @@ async def command_add_description(message: Message) -> None:
 @dp.message(Command("add_answer_style"))
 async def command_add_answer_style(message: Message) -> None:
     await handle_add_answer_style(message, context)
+
+
+@dp.message(Command("who_is_right"))
+async def command_who_is_right(message: Message) -> None:
+    await handle_who_is_right(message, context)
 
 
 @dp.message()
