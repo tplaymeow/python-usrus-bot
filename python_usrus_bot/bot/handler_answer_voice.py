@@ -5,6 +5,8 @@ from aiogram.enums import ContentType
 from aiogram.types import Message
 
 from python_usrus_bot.bot.bot_context import BotContext
+from python_usrus_bot.bot.handle_obscene_stat import handle_obscene_stat
+from python_usrus_bot.bot.handle_voice_reply import handle_voice_reply
 from python_usrus_bot.stt.stt import STT
 
 
@@ -30,10 +32,11 @@ async def handler_answer_voice(message: Message, context: BotContext, bot: Bot) 
 
     output_path = f"{file_unique_id}.{file_extension}"
     await bot.download_file(file_info.file_path, output_path)
-
+    recognized_text = stt.run(output_path)
+    remove(output_path)
     await message.reply((
         f"<b>Расшифровка {content_type}:</b>\n"
-        f"<span class=tg-spoiler>'{stt.run(output_path)}'</span>"
+        f"<span class=tg-spoiler>'{recognized_text}'</span>"
     ), parse_mode="html")
-
-    remove(output_path)
+    await handle_obscene_stat(message, context, recognized_text)
+    await handle_voice_reply(message, context, recognized_text)
