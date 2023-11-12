@@ -1,8 +1,10 @@
-FROM python:3.11
+FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH "${PYTHONPATH}:/app"
+
+RUN apt-get update && apt-get install -y apt-utils && apt-get install -y curl
 
 # install google chrome
 RUN apt update && apt install -y gnupg2 && apt install -y wget
