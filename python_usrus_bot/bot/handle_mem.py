@@ -10,7 +10,7 @@ async def handle_mem(message: Message, bot: Bot) -> None:
     answer_message = await message.reply("Погрузился в поиски...")
 
     try:
-        images = await find_pictures(message_text)
+        images = find_pictures(message_text)
         image = random.choice(images)
         await bot.send_photo(chat_id=message.chat.id, photo=image)
         await answer_message.delete()

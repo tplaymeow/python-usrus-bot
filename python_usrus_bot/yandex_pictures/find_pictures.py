@@ -4,9 +4,9 @@ import json
 HOST = "https://yandex.ru/images/search"
 
 
-async def find_pictures(text):
+def find_pictures(text: str):
     manager = NetworkManager.build_url(HOST, path='', params={'text': text})
-    builder = await NetworkManager.get_html(manager)
+    builder = NetworkManager.get_html(manager)
     builder.filterClass('Root')
     builder.filterID('ImagesApp')
     response = builder.build()

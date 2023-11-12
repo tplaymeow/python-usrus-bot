@@ -8,13 +8,13 @@ class HTMLQueryBuilder:
     def __init__(self, webDriver):
         self.webDriver = webDriver
 
-    def filterID(self, id):
+    def filterID(self, id: str):
         if self.query is None:
             self.query = self.webDriver.find_elements(By.ID, id)
         else:
             self.query = list(filter(lambda x: id in x.get_attribute("id"), self.query))
 
-    def filterClass(self, class_name):
+    def filterClass(self, class_name: str):
         if self.query is None:
             self.query = self.webDriver.find_elements(By.CLASS_NAME, class_name)
         else:

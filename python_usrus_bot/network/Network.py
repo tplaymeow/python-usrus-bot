@@ -6,11 +6,11 @@ from python_usrus_bot.network.HTMLQueryBuilder import HTMLQueryBuilder
 
 class NetworkManager:
     @staticmethod
-    def build_url(base_url, path, params=None):
+    def build_url(base_url: str, path: str, params: dict = None):
         return base_url + path + "?" + urlencode(params)
 
     @staticmethod
-    async def get_html(url) -> HTMLQueryBuilder:
+    def get_html(url: str) -> HTMLQueryBuilder:
         driver = webdriver.Chrome()
         try:
             # Send a GET request using the requests library
