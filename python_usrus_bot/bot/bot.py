@@ -1,14 +1,13 @@
 from os import getenv, remove
-from pathlib import Path
 
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
-from aiogram.methods import SendMessage
 from aiogram.types import Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from python_usrus_bot.bot.bot_context import BotContext
+from python_usrus_bot.bot.handle_mem import handle_mem
 from python_usrus_bot.bot.handle_add_answer_style import handle_add_answer_style
 from python_usrus_bot.bot.handle_add_description import handle_add_description
 from python_usrus_bot.bot.handle_description import handle_description
@@ -76,6 +75,11 @@ async def command_add_description(message: Message) -> None:
 @dp.message(Command("add_answer_style"))
 async def command_add_answer_style(message: Message) -> None:
     await handle_add_answer_style(message, context)
+
+
+@dp.message(Command("mem"))
+async def command_mem(message: Message) -> None:
+    await handle_mem(message, bot)
 
 
 @dp.message(Command("who_is_right"))
