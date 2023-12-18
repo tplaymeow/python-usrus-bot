@@ -1,4 +1,5 @@
 from os import getenv, remove
+import datetime
 
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.filters import Command
@@ -22,6 +23,7 @@ from python_usrus_bot.database.answer_style_repository import AnswerStyleReposit
 from python_usrus_bot.database.description_repository import DescriptionRepository
 from python_usrus_bot.database.obscene_expressions_stat_repository import ObsceneExpressionsStatRepository
 from python_usrus_bot.database.user_info_repository import UserInfoRepository
+from python_usrus_bot.models.obscene_expressions_stat import ObsceneExpressionsStat
 
 bot = Bot(getenv("TG_BOT_TOKEN"))
 dp = Dispatcher()
